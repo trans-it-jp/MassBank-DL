@@ -1,5 +1,8 @@
 numpy
 pandas
+matplotlib
+seaborn
+scikit-learn
 nvidia-cuda-runtime-cu11
 nvidia-cuda-nvrtc-cu11
 nvidia-cudnn-cu11

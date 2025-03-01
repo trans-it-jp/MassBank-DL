@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 class MassBankRecord:
   def __init__(self, mz_step):
@@ -6,6 +7,7 @@ class MassBankRecord:
     self.accession = ''
     self.formula = ''
     self.mz_step = mz_step
+
 
   def read(self, text):
     lines = text.split('\n')
@@ -29,9 +31,6 @@ class MassBankRecord:
           tmp_peaks.append(peak)
           intensities.append(peak[1])
 
-    if len(intensities) > 1:
-      std = max(std, np.std(intensities))
-
     for peak in tmp_peaks:
       self.peaks.append((peak[0], peak[1]))
 
@@ -39,8 +38,10 @@ class MassBankRecord:
   def get_accession(self):
     return self.accession
 
+
   def get_formula(self):
     return self.formula
+
 
   def get_dict(self):
     map = {
@@ -57,3 +58,20 @@ class MassBankRecord:
         map[key] = peak[1]
 
     return map
+  
+
+  @staticmethod
+  def get_records(dir, mz_step):
+    records = []
+
+    for root, dirs, files in os.walk(dir):
+      for file in files:
+        if file.endswith('.txt'):
+          path = root + '/' + file
+          with open(path, 'r') as f:
+            text = f.read()
+            record = MassBankRecord(mz_step)
+            record.read(text)
+            records.append(record)
+
+    return records
